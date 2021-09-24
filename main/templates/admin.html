@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ADMIN PAGE</title>
+</head>
+<body>
+    <div class="inner" id="title">
+        Simple Admin Page
+    </div>
+    <div class="inner">
+        <div class="box">
+            <input type="text" id="u_cre" placeholder="Username want to create" required>
+            <button id="create" onclick='create()'>Create</button>
+        </div>
+    </div>
+    <br>
+    <div class="inner">
+        <div class="box">
+            <input type="hidden" id="_method" value="PATCH"/>
+            <input type="text" id="u_up1" placeholder="Username want to change" required><br>
+            <input type="text" id="u_up2" placeholder="Username want to set" required>
+            <button id="update" onclick='update()'>Update</button>
+        </div>
+    </div>
+    <br>
+    <div class="inner">
+        <div class="box">
+            <input type="hidden" id="_method" value="DELETE"/>
+            <input type="text" id="u_del" placeholder="Username want to delete" required>
+            <button id="delete" onclick='del()'>Delete</button>
+        </div>
+        <button id="login" onclick="login()">Login</button>
+    </div>
+</body>
+<script>
+    window.onload = function(){
+        function query_to_json() {
+            var list_q = location.search.split('&');
+            var ret = {};
+            for (var query in list_q) {
+                query = list_q[query]
+                if (query[0] == '?')
+                    query = query.substr(1, query.length+1);
+                var data = query.split('=');
+                ret[data[0]]=data[1];
+            }
+            return ret;//JSON.stringify(ret)
+        }
+        
+        function request(URL, method, body){
+        fetch(URL, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                /*'credentials': 'include',*/},
+            body: JSON.stringify(body)});
+            
+        }
+        
+        var b_create = document.getElementById('create');
+        var b_delete = document.getElementById('delete');
+        var b_update = document.getElementById('update');
+        var b_login = document.getElementById('login');
+        
+        b_create.onclick = function() {
+            request('https://boj-ranking-tqomc.run.goorm.io/user/'+document.getElementById('u_cre').value, 'POST');
+        }
+        b_delete.onclick = function() {
+            request('https://boj-ranking-tqomc.run.goorm.io/user/'+document.getElementById('u_del').value, 'DELETE');
+        }
+        b_update.onclick = function() {
+            request('https://boj-ranking-tqomc.run.goorm.io/user/'+document.getElementById('u_up1').value, 'PATCH', {username2:document.getElementById('u_up2').value});
+        }
+        b_login.onclick = function() {
+            var qjson = query_to_json();
+            
+            if (qjson['code'])
+                request('https://boj-ranking-tqomc.run.goorm.io/user/login', 'POST', qjson);
+            else
+                window.location.href = 'https://github.com/login/oauth/authorize?client_id=fb0b9cd9b0766772bdfc';
+        }
+    }
+</script>
+<style>
+    * { padding : 0;
+        margin : 0;
+        font-family: 'Be Vietnam Pro', sans-serif;
+    }
+    
+    html {
+        height:100vh;
+        width:100vw;
+        background: #23074d;
+        background: linear-gradient(to bottom, #261746, #691057, #FF8202); 
+        color:white;
+        font-size:2.5vh;
+        font-weight:lighter;
+    }
+    
+    #title {
+        text-align:center;
+        font-size:10vh;
+        font-weight:bold;
+    }
+    
+    
+    .inner {
+        width:100vw;
+        text-align:center;
+        padding-top:5vh;
+        /*border: 1px solid;*/
+    }
+    
+    .inner > * {
+        margin:auto;
+    }
+    input {
+        width:35vh;
+        height:3vh;
+        color:white;
+        border:0.1vw solid;
+        background-color:rgba(0,0,0,0);
+        font-size:3vh;
+        padding:0;
+        font-weight:lighter;
+        font-size:3vh;
+        
+        padding:0;
+    }
+    
+    input::placeholder {
+        font-weight:lighter;
+        color:white;
+        font-size:3vh;
+    }
+    
+    button {
+        color:white;
+        border:0.1vw solid;
+        background-color:rgba(0,0,0,0);
+        width:8vh;
+        height:3vh;
+        font-size:2vh;
+        padding:0;
+        float:top;
+        transition: all 0.2s ease 0s;
+    }
+    
+    button:hover {
+        cursor:pointer;
+        transition: all 0.2s ease 0s;
+    }
+    
+    .box {
+        
+    }
+    
+</style>
+</html>

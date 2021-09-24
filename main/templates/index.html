@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<!--
+별똥별 계획
+1. 사선으로 
+-->
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" charset="UTF-8">
+    
+    <title>INDEX PAGE</title>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <header class="block">
+        <div class="inner" id="title">
+            BOJ Ranking
+        </div>
+    </header>
+    <main class="block">
+        <div class="inner">
+            
+        
+            <table>
+                <thaed>
+                    <th class="t-title">순위</th>
+                    <th class="t-title">유저</th>
+                    <th class="t-title">월</th>
+                    <th class="t-title">화</th>
+                    <th class="t-title">수</th>
+                    <th class="t-title">목</th>
+                    <th class="t-title">금</th>
+                    <th class="t-title">토</th>
+                    <th class="t-title">일</th>
+                    <th class="t-title">총합</th>
+                    
+                </thaed>
+                <tbody>
+                </tbody>
+            </table>
+    <button id="bt-refresh" class="clicked">갱신</button>
+        </div>
+        
+    </main>
+    <footer class="block">
+        <div class="inner">
+            연습용 페이지
+        </div>
+    </footer>
+</body>
+<script type="text/javascript">
+    /*
+    정보 갱신이 시작되면 발생하는 이벤트와
+    정보 갱신이 끝나면 발생되는 이벤트의 구분이 필요할듯 함.
+    */
+    window.onload = function(){
+        //var a =document.getElementById('tt');
+        //a.onclick = function() { alert('클릭'); }
+        var bt_refresh = document.getElementById('bt-refresh');
+        var tmp;
+        
+        bt_refresh.onclick = function() {
+            console.log("test");
+            sock.emit('refresh');
+            //table_update(tmp)
+        }
+        var sock = io.connect('https://boj-ranking-tqomc.run.goorm.io');
+            sock.on('request', function(){
+                var bt_refresh = document.getElementById('bt-refresh');
+                bt_refresh.className='clicked';
+                bt_refresh.disabled = true;
+                
+            })
+            sock.on('refresh', function(msg){
+                //console.log(msg)
+                table_update(JSON.parse(msg))
+                document.getElementById('bt-refresh').classList.remove('clicked');
+                document.getElementById('bt-refresh').disabled = false;
+                //console.log(msg[1], msg.length)
+                //table_update(msg)
+            });
+        function table_update(rank_table) {
+            var tbody = document.getElementsByTagName('tbody')[1];
+            //tbody.removeChild();
+            tbody.innerHTML=""
+            //console.log(rank_table)
+            for (var i=0; i<rank_table.length; i++) {
+                var t_r = document.createElement('tr');
+                tbody.appendChild(t_r);
+                t_r.className += "created";
+                var last_child = tbody.lastChild;
+                
+                var user = rank_table[i];
+                for(test in user) {
+                    //console.log(user[test]);
+                    var t_d = document.createElement('td');
+                    
+                    var text = document.createTextNode('');
+                    text.nodeValue = (user[test] ? user[test]:'-');
+                    //t_d.className += "created";
+                    t_d.appendChild(text);
+                    last_child.appendChild(t_d);
+                    
+                }
+            }
+            setTimeout(delete_created, 0.5);
+            
+            
+        }
+        
+        function delete_created() {
+            var list_created = document.getElementsByClassName('created');
+            var i=0;
+            while (list_created.length) {
+                
+                list_created[0].style.transitionDelay="0."+i++ + "s";
+                //list_created[0].style.borderLeft = "1px solid white";
+                list_created[0].classList.remove('created');
+            }
+        }
+        
+    }
+</script>
+<style>
+    * { padding : 0;
+        margin : 0;
+        font-family: 'Be Vietnam Pro', sans-serif;
+    }
+    
+    html {
+        height:100vh;
+        width:100vw;
+        background: #23074d;
+        background: linear-gradient(to bottom, #261746, #691057, #FF8202); 
+        /*#95feff, #00ffc0*/
+        color:white;
+    }
+    
+    #title {
+        text-align:center;
+        font-size:10vh;
+        font-weight:bold;
+    }
+    
+    table {
+        display:table;
+        font-weight:lighter;
+        border-collapse: collapse;
+        /*border:1px solid;*/
+        text-align:left;
+    }
+    
+    td{
+        padding:1vh 1vw;
+        border-top:1px solid rgba(255, 255, 255, 0.7);
+    }
+    
+    td.today {
+        border-left: 1px solid rgba(255, 255, 255, 0.7);
+        border-right: 1px solid rgba(255, 255, 255, 0.7);
+    }
+    tr {
+        font-size:2.5vh;
+        transition: all 0.5s ease 0.5s;
+    }
+    
+    tr.created {
+        /*<속성> <기간> <방식> <지연>;*/
+        transition: all 0.5s ease 0.5s;
+        transform: translate(2rem, 0rem);
+        opacity:0;
+    }
+    
+    .block {
+        display:inline;
+    }
+    
+    .inner {
+        width:100vw;
+        text-align:center;
+        padding-top:5vh;
+        /*border: 1px solid;*/
+    }
+    
+    .inner > * {
+        margin:auto;
+    }
+    
+    .t-title {
+        font-weight:lighter;
+        
+    }
+    
+    button {
+        color:white;
+        border:0.1vw solid;
+        background-color:rgba(0,0,0,0);
+        width:8vh;
+        height:4vh;
+        font-size:2vh;
+        transition: all 0.5s ease 0s;
+        /*border-radius:50%;*/
+    }
+    
+    button:hover {
+        cursor:pointer;
+    }
+    
+    button.clicked {
+        height:0;
+        transition: all 0.5s ease 0;
+        opacity:0;
+        font-size:0.5vh;
+        cursor:default;
+    }
+    
+    .moon {
+        width: 8vh;
+        height: 8vh;
+        border-radius: 50%;
+        box-shadow: 1vh 1vh 0 0 rgba(255, 255, 102, 0.5);
+    }
+    
+    .star1 {
+        width:0.5vh;
+        height:0.5vh;
+        background-color:rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 1vh 1vh rgba(200, 200, 255, 0.2);
+        border-radius:50%;
+        transform: rotate(-45deg);
+        position: relative;
+        
+    }
+    
+    .star1:after {
+        content:"";
+        width:10vh;
+        top:1px;
+        height:0.5px;
+        background-color:rgba(255, 255, 255, 0.5);
+        position:absolute;
+    }
+    
+    .shooting {
+        animation-duration: 6s;
+        animation-delay:1s;
+        animation-name: test;
+        animation-iteration-count:infinite;
+        animation-timing-function:ease-in-out;
+    }
+    
+    @keyframes test {
+        0% {
+            top:0px;
+            left:0px;
+        }
+        30% {
+            
+            top:100px;
+            left:-100px;
+        }
+    }
+    
+    .test {
+        height:100vh;
+    }
+</style>
+</html>

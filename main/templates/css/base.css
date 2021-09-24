@@ -1,0 +1,82 @@
+<style>
+* { padding : 0;
+        margin : 0;
+        font-family: 'Be Vietnam Pro', sans-serif;
+    }
+
+html {
+    height:100vh;
+    width:100vw;
+    background: #23074d;
+    background: linear-gradient(to bottom, #261746, #691057, #FF8202); 
+    color:white;
+}
+
+#title {
+    text-align:center;
+    font-size:10vh;
+    font-weight:bold;
+}
+
+table {
+    display:table;
+    font-weight:lighter;
+    border-collapse: collapse;
+    /*border:1px solid;*/
+    text-align:left;
+}
+
+td{
+    padding:1vh 1vw;
+    border-top:0.1px solid rgba(255, 255, 255, 0.7);;
+}
+
+tr {
+    font-size:2.5vh;
+    transition: all 0.5s ease 0.5s;
+}
+
+tr.created {
+    /*<속성> <기간> <방식> <지연>;*/
+    transition: all 0.5s ease 0.5s;
+    transform: translate(2rem, 0rem);
+    opacity:0;
+}
+
+.block {
+    display:inline;
+}
+
+.inner {
+    width:100vw;
+    text-align:center;
+    padding-top:5vh;
+    /*border: 1px solid;*/
+}
+
+.inner > * {
+    margin:auto;
+}
+
+.t-title {
+    font-weight:lighter;
+    
+}
+
+button {
+    color:white;
+    border:0.1vw solid;
+    background-color:rgba(0,0,0,0);
+    width:8vh;
+    height:4vh;
+    font-size:2vh;
+    transition: all 0.5s ease 0s;
+    /*border-radius:50%;*/
+}
+
+button.clicked {
+    height:0;
+    transition: all 0.5s ease 0;
+    opacity:0;
+}
+</style>
