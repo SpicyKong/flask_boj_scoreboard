@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <!--
-별똥별 계획
-1. 사선으로 
+앞으로의 계확
+1) aws ssl 등록해보기
+2) http > https로 리다이렉트하기
+3) 테스트 해보기
+
 -->
 <html lang="en">
 <head>
@@ -54,10 +57,8 @@
     </footer>
 </body>
 <script type="text/javascript">
-    /*
-    정보 갱신이 시작되면 발생하는 이벤트와
-    정보 갱신이 끝나면 발생되는 이벤트의 구분이 필요할듯 함.
-    */
+    
+    var URL = 'https://alrigothm.shop';
     window.onload = function(){
         //var a =document.getElementById('tt');
         //a.onclick = function() { alert('클릭'); }
@@ -69,7 +70,7 @@
             sock.emit('refresh');
             //table_update(tmp)
         }
-        var sock = io.connect('https://boj-ranking-tqomc.run.goorm.io');
+        var sock = io.connect(URL);
             sock.on('request', function(){
                 var bt_refresh = document.getElementById('bt-refresh');
                 bt_refresh.className='clicked';

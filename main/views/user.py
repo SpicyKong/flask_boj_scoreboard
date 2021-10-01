@@ -203,7 +203,7 @@ def login():
         message = 'Sorry, It must be accessed by admin.'
         http_status = 401
         
-    response = make_response(redirect('https://boj-ranking-tqomc.run.goorm.io/user/admin'))
+    response = make_response(redirect('https://alrigothm.shop/user/admin'))
     if http_status == 200:
         response.set_cookie('user_jwt', user_jwt, httponly=True)
     response.headers['credentials']='include'
