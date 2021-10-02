@@ -9,6 +9,9 @@ from .user import get_table_by_json
 bp = Blueprint('index', __name__, url_prefix='/')
 
 is_running = False
+@bp.route('/check')
+def health_check():
+    return ''
 
 @bp.route('')
 def main_page():
